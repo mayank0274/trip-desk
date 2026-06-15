@@ -33,7 +33,7 @@
   --color-destructive: var(--destructive);
 
   --font-sans: var(--font-poppins);
-  --font-heading: var(--font-montserrat);
+  --font-heading: var(--font-poppins);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
