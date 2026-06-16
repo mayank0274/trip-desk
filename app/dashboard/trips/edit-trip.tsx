@@ -37,7 +37,7 @@ export function EditTripDialog({ trip, open, onOpenChange }: IProps) {
     const mutation = useMutation({
         mutationFn: async (payload: CreateTripInput) => {
             try {
-                const response = await axios.patch(`/api/trips/${trip.id}`, payload, {
+                const response = await axios.patch(`/api/admin/trips/${trip.id}`, payload, {
                     headers: {
                         "Content-Type": "application/json",
                     },

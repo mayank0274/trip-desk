@@ -53,7 +53,7 @@ export function CreateTripDialog() {
     const mutation = useMutation({
         mutationFn: async (payload: CreateTripInput) => {
             try {
-                const response = await axios.post("/api/trips", payload, {
+                const response = await axios.post("/api/admin/trips", payload, {
                     headers: {
                         "Content-Type": "application/json",
                     },

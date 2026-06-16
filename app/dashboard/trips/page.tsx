@@ -21,38 +21,8 @@ import { queryClient } from "@/app/TanstackQueryProvider"
 import { EditTripDialog } from "./edit-trip"
 import Image from "next/image"
 import Link from "next/link"
+import { Trip, TripsResponse } from "./types"
 
-export type Trip = {
-    name: string
-    slug: string
-    origin: string
-    destination: string
-    start_date: string
-    end_date: string
-    price: number
-    total_seats: number
-    status: "open" | "closed",
-    id: string,
-    description: string,
-    thumbnail: string
-}
-
-type Pagination = {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-    hasNext: boolean
-    hasPrevious: boolean
-}
-
-export interface TripsResponse {
-    data: {
-        trips: Trip[];
-        pagination: Pagination;
-    };
-    message: string;
-}
 
 export default function TripsPage() {
     const router = useRouter()
@@ -71,7 +41,7 @@ export default function TripsPage() {
         queryFn: async () => {
             try {
                 const response = await axios.get<TripsResponse>(
-                    `/api/trips?page=${page}&limit=${limit}&state=${state}`
+                    `/api/admin/trips?page=${page}&limit=${limit}&state=${state}`
                 )
                 return response.data.data
             } catch (error: any) {
@@ -95,7 +65,7 @@ export default function TripsPage() {
         mutationFn: async (tripId: string) => {
             try {
                 const response = await axios.delete(
-                    `/api/trips/${tripId}`
+                    `/api/admin/trips/${tripId}`
                 )
                 return response.data.data
             } catch (error: any) {
