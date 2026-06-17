@@ -14,21 +14,32 @@ import {
     ChevronLeft,
 } from "lucide-react";
 import { Trip } from "@/app/dashboard/trips/types";
+import { LeadForm } from "./leads-form";
 
 type Props = {
     params: Promise<{ slug: string }>;
 };
 
 async function getTrip(slug: string): Promise<Trip> {
-    try {
-        const { data } = await axios.get<{ trip: Trip; message: string }>(
-            `${process.env.NEXT_PUBLIC_APP_URL}/api/trips/${slug}`,
-            { headers: { "Content-Type": "application/json" } }
-        );
-        return data.trip;
-    } catch {
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/trips/${slug}`,
+        {
+            next: {
+                revalidate: 60 * 10, // 10 min
+            },
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (!response.ok) {
         notFound();
     }
+
+    const data: { trip: Trip } = await response.json();
+
+    return data.trip;
 }
 
 function formatDate(value: string, short = false) {
@@ -63,6 +74,7 @@ export default async function TripDetailPage({ params }: Props) {
                     fill
                     priority
                     className="object-cover"
+                    loading="eager"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
                 <div className="absolute left-5 top-5 md:left-10 md:top-8">
@@ -207,25 +219,9 @@ export default async function TripDetailPage({ params }: Props) {
                                     </span>
                                 </div>
                             </div>
-
-                            <Separator />
-
-                            <Button
-                                size="lg"
-                                disabled={!isOpen}
-                                className="w-full text-base font-semibold"
-                            >
-                                {isOpen ? "Book this Trip" : "Booking Closed"}
-                            </Button>
-
-                            {isOpen && (
-                                <p className="text-center text-xs text-muted-foreground">
-                                    No payment charged yet — reserve your spot first.
-                                </p>
-                            )}
                         </div>
                     </div>
-
+                    <LeadForm tripId={trip.id} />
                 </div>
             </div>
         </div>
