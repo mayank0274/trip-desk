@@ -12,23 +12,8 @@ import { CheckCircle2, AlertCircle } from "lucide-react";
 
 import { GROUP_TYPE_OPTIONS, GroupType } from "./constants";
 import { CreateLeadInput } from "@/lib/validators/leads";
+import { Field } from "@/components/field";
 
-export function Field({
-    label,
-    htmlFor,
-    children,
-}: {
-    label: string;
-    htmlFor: string;
-    children: React.ReactNode;
-}) {
-    return (
-        <div className="flex flex-col gap-1.5">
-            <Label htmlFor={htmlFor}>{label}</Label>
-            {children}
-        </div>
-    );
-}
 
 type Props = {
     tripId: string;

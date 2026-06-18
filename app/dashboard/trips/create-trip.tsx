@@ -23,25 +23,9 @@ import slugify from "slugify";
 import { useSearchParams } from "next/navigation";
 import { TripsResponse } from "@/app/dashboard/trips/types";
 import { queryClient } from "@/app/TanstackQueryProvider";
+import { Field } from "@/components/field";
 
-export function Field({
-    label,
-    htmlFor,
-    children,
-}: {
-    label: string;
-    htmlFor: string;
-    children: React.ReactNode;
-}) {
-    return (
-        <div className="flex flex-col gap-1.5">
-            <Label htmlFor={htmlFor} className="text-sm font-medium">
-                {label}
-            </Label>
-            {children}
-        </div>
-    );
-}
+
 
 export function CreateTripDialog() {
     const searchParams = useSearchParams()

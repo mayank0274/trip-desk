@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 import { Button } from "@/components/ui/button"
-import { TripCard } from "@/components/trip-card"
-import { TripCardSkeleton } from "@/components/trip-card-skeleton"
+import { TripCard } from "@/app/(home)/trip-card"
+import { TripCardSkeleton } from "@/app/(home)/trip-card-skeleton"
 import type { TripsResponse } from "@/app/dashboard/trips/types"
 
 const DEFAULT_LIMIT = 12

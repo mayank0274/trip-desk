@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Plus, CheckCircle2, AlertCircle } from "lucide-react";
 import axios from "axios";
 import { CreateTripInput } from "@/lib/validators/trip";
-import { Field } from "./create-trip";
+import { Field } from "@/components/field";
 import { Trip, TripsResponse } from "@/app/dashboard/trips/types";
 import { queryClient } from "@/app/TanstackQueryProvider"
 import { useSearchParams } from "next/navigation";

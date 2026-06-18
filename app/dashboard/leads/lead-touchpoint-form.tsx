@@ -24,7 +24,7 @@ import {
     Mail,
 } from "lucide-react";
 
-import { Field } from "@/app/dashboard/trips/create-trip";
+import { Field } from "@/components/field";
 
 interface IProps {
     leadId: string;
