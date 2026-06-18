@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LEAD_STATUS } from "@/app/dashboard/leads/types";
+import { GROUP_TYPE, LEAD_STATUS } from "@/types/leads";
 
 export const createLeadSchema = z.object({
   name: z
@@ -25,7 +25,7 @@ export const createLeadSchema = z.object({
 
   trip_id: z.uuid("Invalid trip"),
 
-  group_type: z.enum(["SOLO", "FRIENDS", "COUPLE", "FAMILY"]),
+  group_type: z.enum(Object.values(GROUP_TYPE)),
 
   preferred_month: z.string().date(),
 

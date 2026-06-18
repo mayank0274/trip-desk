@@ -13,11 +13,11 @@ import {
 } from "@/components/ui/table"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { Badge } from "@/components/ui/badge"
 import { SkeletonTable } from "@/components/table-skeleton-loader"
 import { queryClient } from "@/app/TanstackQueryProvider"
-import { EditLead, Lead, LeadStatus, LeadWithTrip, LeadsResponse } from "./types"
+import { EditLead, LeadWithTrip, LeadsResponse } from "./types"
 import { LEAD_STATUS_OPTIONS } from "./constants"
+import { LeadStatus } from "@/types/leads"
 import Link from "next/link"
 import {
     Select,

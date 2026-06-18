@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
-import type { Trip } from "@/app/dashboard/trips/types"
+import type { Trip } from "@/types/trips"
 import { Calendar1Icon } from "lucide-react"
 
 type TripCardProps = {

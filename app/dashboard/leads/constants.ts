@@ -1,4 +1,4 @@
-import { LEAD_STATUS, LeadStatus } from "./types";
+import { LEAD_STATUS, LeadStatus } from "@/types/leads";
 
 export const LEAD_STATUS_OPTIONS: Array<{ value: LeadStatus; label: string }> =
   [

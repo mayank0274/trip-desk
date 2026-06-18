@@ -7,7 +7,7 @@ import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { TripCard } from "@/app/(home)/trip-card"
 import { TripCardSkeleton } from "@/app/(home)/trip-card-skeleton"
-import type { TripsResponse } from "@/app/dashboard/trips/types"
+import type { TripsResponse } from "@/types/trips"
 
 const DEFAULT_LIMIT = 12
 

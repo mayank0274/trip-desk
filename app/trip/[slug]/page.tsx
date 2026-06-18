@@ -13,7 +13,7 @@ import {
     ArrowRight,
     ChevronLeft,
 } from "lucide-react";
-import { Trip } from "@/app/dashboard/trips/types";
+import { Trip } from "@/types/trips";
 import { LeadForm } from "./leads-form";
 
 type Props = {

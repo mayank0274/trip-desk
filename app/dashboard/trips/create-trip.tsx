@@ -21,7 +21,7 @@ import axios from "axios";
 import { CreateTripInput } from "@/lib/validators/trip";
 import slugify from "slugify";
 import { useSearchParams } from "next/navigation";
-import { TripsResponse } from "@/app/dashboard/trips/types";
+import { TripsResponse } from "@/types/trips";
 import { queryClient } from "@/app/TanstackQueryProvider";
 import { Field } from "@/components/field";
 

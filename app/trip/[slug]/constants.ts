@@ -1,15 +1,10 @@
-export const GROUP_TYPES = {
-  SOLO: "SOLO",
-  FRIENDS: "FRIENDS",
-  COUPLE: "COUPLE",
-  FAMILY: "FAMILY",
-} as const;
+import { GROUP_TYPE, GroupType } from "@/types/leads";
 
 export const GROUP_TYPE_OPTIONS = [
-  { value: GROUP_TYPES.SOLO, label: "Solo" },
-  { value: GROUP_TYPES.FRIENDS, label: "Friends" },
-  { value: GROUP_TYPES.COUPLE, label: "Couple" },
-  { value: GROUP_TYPES.FAMILY, label: "Family" },
+  { value: GROUP_TYPE.SOLO, label: "Solo" },
+  { value: GROUP_TYPE.FRIENDS, label: "Friends" },
+  { value: GROUP_TYPE.COUPLE, label: "Couple" },
+  { value: GROUP_TYPE.FAMILY, label: "Family" },
 ] as const;
 
-export type GroupType = keyof typeof GROUP_TYPES;
+export type { GroupType };

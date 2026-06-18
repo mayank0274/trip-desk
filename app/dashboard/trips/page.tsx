@@ -21,7 +21,7 @@ import { queryClient } from "@/app/TanstackQueryProvider"
 import { EditTripDialog } from "./edit-trip"
 import Image from "next/image"
 import Link from "next/link"
-import { Trip, TripsResponse } from "./types"
+import { Trip, TripsResponse } from "@/types/trips"
 
 
 export default function TripsPage() {
