@@ -83,3 +83,16 @@ export interface LeadTouchPointsResponse {
   touchpoints: LeadTouchPoints[];
   message: string;
 }
+
+export type AIRequest = {
+  type: "summary";
+  payload: Pick<LeadTouchPoints, "contact_via" | "next_action" | "note">[];
+};
+
+export type AiResponse = {
+  data: {
+    type: "summary";
+    res: { summary: string };
+  };
+  message: string;
+};

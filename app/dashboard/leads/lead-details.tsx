@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
     Sheet,
     SheetContent,
@@ -20,9 +20,13 @@ import {
     Plane,
     Users,
     MessageSquare,
+    Sparkle,
+    Loader2,
 } from "lucide-react";
 
-import { LeadWithTrip, LeadTouchPointsResponse } from "./types";
+import { LeadWithTrip, LeadTouchPointsResponse, AIRequest, LeadTouchPoints, AiResponse } from "./types";
+import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 interface Props {
     lead: LeadWithTrip | null;
@@ -35,6 +39,7 @@ export function LeadDetailsSheet({
     open,
     onOpenChange,
 }: Props) {
+
     const { data, isLoading, error } = useQuery<LeadTouchPointsResponse>({
         queryKey: ["lead-touchpoints", lead?.id],
         enabled: !!lead?.id && open,
@@ -51,6 +56,29 @@ export function LeadDetailsSheet({
                 )
             }
         },
+    });
+
+    const aiRequestType = useRef<"summary" | null>(null);
+    const { mutateAsync: aiHandler, isPending: isPerformingAiOps, error: aiOpsError, data: aiResponse } = useMutation({
+        mutationFn: async (payload: AIRequest) => {
+            try {
+                const response = await axios.post<AiResponse>(
+                    `/api/admin/ai`,
+                    payload
+                );
+                return response.data.data;
+            } catch (err: any) {
+                throw new Error(
+                    err?.response?.data?.message ?? "Failed to fetch call logs"
+                )
+            }
+        },
+        onError: (err) => {
+            alert(err.message)
+        },
+        onSuccess: () => {
+            aiRequestType.current = null;
+        }
     });
 
     if (error) {
@@ -147,15 +175,56 @@ export function LeadDetailsSheet({
                             </CardContent>
                         </Card>
 
-                        <div>
-                            <h3 className="font-semibold mb-5">
-                                Touchpoint Timeline
-                            </h3>
+                        <div className="mb-4">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                                    Touchpoint Timeline
+                                </h3>
+
+                                <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    className="gap-2"
+                                    onClick={async () => {
+                                        const payload = data?.touchpoints.map(
+                                            ({ contact_via, next_action, note }: LeadTouchPoints) => ({
+                                                contact_via,
+                                                next_action,
+                                                note,
+                                            })
+                                        );
+
+                                        if (!payload?.length) return;
+
+                                        aiRequestType.current = "summary";
+                                        await aiHandler({ type: "summary", payload });
+                                    }}
+                                    disabled={isPerformingAiOps && aiRequestType.current === "summary"}
+                                >
+                                    {isPerformingAiOps && aiRequestType.current === "summary" ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkle className="w-3 h-3" />}
+                                    AI Summary
+                                </Button>
+                            </div>
+
+                            {aiResponse?.type === "summary" && (
+                                <div className="mb-4 rounded-xl border bg-muted/40 p-4 shadow-sm">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Sparkle className="w-4 h-4 text-primary" />
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            AI Insight
+                                        </p>
+                                    </div>
+
+                                    <p className="text-sm leading-relaxed text-foreground">
+                                        {aiResponse.res.summary}
+                                    </p>
+                                </div>
+                            )}
 
                             {isLoading ? (
-                                <div className="space-y-4">
-                                    <Skeleton className="h-28 w-full" />
-                                    <Skeleton className="h-28 w-full" />
+                                <div className="space-y-3 mb-4">
+                                    <Skeleton className="h-20 w-full rounded-xl" />
+                                    <Skeleton className="h-20 w-full rounded-xl" />
                                 </div>
                             ) : !data?.touchpoints.length ? (
                                 <Card>
@@ -167,31 +236,26 @@ export function LeadDetailsSheet({
                                 <div className="relative pl-8">
                                     <div className="absolute left-[10px] top-0 bottom-0 w-px bg-border" />
 
-                                    {data.touchpoints.map((touchpoint) => (
-                                        <div
-                                            key={touchpoint.id}
-                                            className="relative mb-6"
-                                        >
+                                    {data?.touchpoints.map((touchpoint) => (
+                                        <div key={touchpoint.id} className="relative mb-6">
                                             <div className="absolute -left-[30px] top-6 h-5 w-5 rounded-full border-4 border-background bg-primary shadow-sm" />
 
                                             <Card className="shadow-sm">
                                                 <CardContent className="p-4">
                                                     <div className="flex items-start justify-between gap-4">
-                                                        <Badge
-                                                            variant="secondary"
-                                                            className="capitalize"
-                                                        >
-                                                            {
-                                                                touchpoint.contact_via
-                                                            }
+                                                        <Badge variant="secondary" className="capitalize">
+                                                            {touchpoint.contact_via}
                                                         </Badge>
 
                                                         <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                                            {new Date(`${touchpoint.created_at}Z`).toLocaleString("en-IN", {
-                                                                timeZone: "Asia/Kolkata",
-                                                                dateStyle: "medium",
-                                                                timeStyle: "short",
-                                                            })}
+                                                            {new Date(`${touchpoint.created_at}Z`).toLocaleString(
+                                                                "en-IN",
+                                                                {
+                                                                    timeZone: "Asia/Kolkata",
+                                                                    dateStyle: "medium",
+                                                                    timeStyle: "short",
+                                                                }
+                                                            )}
                                                         </span>
                                                     </div>
 
@@ -199,9 +263,7 @@ export function LeadDetailsSheet({
                                                         <MessageSquare className="size-4 mt-0.5 text-muted-foreground shrink-0" />
 
                                                         <p className="text-sm leading-relaxed">
-                                                            {
-                                                                touchpoint.note
-                                                            }
+                                                            {touchpoint.note}
                                                         </p>
                                                     </div>
 
@@ -210,11 +272,8 @@ export function LeadDetailsSheet({
                                                             <p className="text-xs font-medium text-muted-foreground mb-1">
                                                                 Next Action
                                                             </p>
-
                                                             <p className="text-sm">
-                                                                {
-                                                                    touchpoint.next_action
-                                                                }
+                                                                {touchpoint.next_action}
                                                             </p>
                                                         </div>
                                                     )}
