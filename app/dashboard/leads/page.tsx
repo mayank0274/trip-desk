@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { Suspense, useRef, useState } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,7 +32,7 @@ import { LeadDetailsSheet } from "./lead-details"
 import { Input } from "@/components/ui/input"
 import { debounce } from "@/lib/utils"
 
-export default function LeadsPage() {
+function Leads() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -415,4 +415,8 @@ export default function LeadsPage() {
             }
         </div>
     )
+}
+
+export default function LeadsPage() {
+    return <Suspense fallback={<SkeletonTable />}><Leads /></Suspense>
 }

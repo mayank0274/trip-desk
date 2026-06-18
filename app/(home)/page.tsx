@@ -8,10 +8,28 @@ import { Button } from "@/components/ui/button"
 import { TripCard } from "@/app/(home)/trip-card"
 import { TripCardSkeleton } from "@/app/(home)/trip-card-skeleton"
 import type { TripsResponse } from "@/types/trips"
+import { Suspense } from "react"
 
 const DEFAULT_LIMIT = 12
 
-export default function Home() {
+const HomePageLoader = () => {
+  return <main className="min-h-screen">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mb-8">
+        <div className="h-10 w-56 animate-pulse rounded bg-muted" />
+        <div className="mt-3 h-4 w-80 animate-pulse rounded bg-muted" />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <TripCardSkeleton key={index} />
+        ))}
+      </div>
+    </div>
+  </main>
+}
+
+function Home() {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -38,20 +56,7 @@ export default function Home() {
 
   if (isPending) {
     return (
-      <main className="min-h-screen">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <div className="h-10 w-56 animate-pulse rounded bg-muted" />
-            <div className="mt-3 h-4 w-80 animate-pulse rounded bg-muted" />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <TripCardSkeleton key={index} />
-            ))}
-          </div>
-        </div>
-      </main>
+      <HomePageLoader />
     )
   }
 
@@ -122,4 +127,8 @@ export default function Home() {
       </div>
     </main>
   )
+}
+
+export default function HomePage() {
+  return <Suspense fallback={<HomePageLoader />}><Home /></Suspense>
 }

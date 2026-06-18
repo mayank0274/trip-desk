@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { Suspense, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Loader2, Pencil, Trash2 } from "lucide-react"
@@ -24,7 +24,7 @@ import Link from "next/link"
 import { Trip, TripsResponse } from "@/types/trips"
 
 
-export default function TripsPage() {
+function Trips() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -261,4 +261,8 @@ export default function TripsPage() {
             )}
         </div>
     )
+}
+
+export default function TripsPage() {
+    return <Suspense fallback={<SkeletonTable />}><Trips /></Suspense>
 }
