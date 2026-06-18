@@ -21,6 +21,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 
 const navItems = [
@@ -50,15 +51,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="border-b border-sidebar-border/50 px-4 py-3.5 h-16">
-        <div className="flex items-center gap-2">
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="font-bold text-lg select-none">N</span>
+        <Link href={"/"}>
+          <div className="flex items-center gap-2">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <span className="font-bold text-lg select-none">N</span>
+            </div>
+            <div className="flex flex-col gap-0.4 leading-none">
+              <span className="font-bold text-base tracking-tight text-foreground">Nomichi</span>
+              <span className="text-[10px] text-muted-foreground font-medium">Dashboard Portal</span>
+            </div>
           </div>
-          <div className="flex flex-col gap-0.4 leading-none">
-            <span className="font-bold text-base tracking-tight text-foreground">Nomichi</span>
-            <span className="text-[10px] text-muted-foreground font-medium">Dashboard Portal</span>
-          </div>
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

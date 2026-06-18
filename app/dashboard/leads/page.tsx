@@ -154,17 +154,22 @@ export default function LeadsPage() {
     const { leads, pagination } = data ?? { leads: [], pagination: null }
 
     return (
-        <div className="flex flex-col gap-6 w-[97%] min-w-0">
-            <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-6 md:w-[97%] w-full min-w-0">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <h1 className="text-3xl font-semibold">Leads</h1>
-                <div className="flex items-end gap-4">
+
+                <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-medium text-muted-foreground">
                             Search
                         </label>
-                        <Input defaultValue={search} type="search" placeholder="Name,email or phone " onChange={(e) => {
-                            updateSearch(e.target.value)
-                        }} />
+                        <Input
+                            className="w-full sm:w-72"
+                            defaultValue={search}
+                            type="search"
+                            placeholder="Name, email or phone"
+                            onChange={(e) => updateSearch(e.target.value)}
+                        />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
@@ -174,18 +179,16 @@ export default function LeadsPage() {
                         <Select
                             value={status}
                             onValueChange={(value) => {
-                                const params = new URLSearchParams(searchParams.toString())
-                                params.set("status", value)
-                                router.push(`${pathname}?${params.toString()}`)
+                                const params = new URLSearchParams(searchParams.toString());
+                                params.set("status", value);
+                                router.push(`${pathname}?${params.toString()}`);
                             }}
                         >
-                            <SelectTrigger size="sm" className="w-48">
+                            <SelectTrigger className="w-full sm:w-48">
                                 <SelectValue placeholder="Filter by status" />
                             </SelectTrigger>
-
                             <SelectContent>
                                 <SelectItem value="all">All</SelectItem>
-
                                 {LEAD_STATUS_OPTIONS.map((opt) => (
                                     <SelectItem key={opt.value} value={opt.value}>
                                         {opt.label}
@@ -202,14 +205,13 @@ export default function LeadsPage() {
                         <Select
                             defaultValue={owner}
                             onValueChange={(value) => {
-                                const params = new URLSearchParams(searchParams.toString())
-                                params.set("owner", value)
-                                router.push(`${pathname}?${params.toString()}`)
+                                const params = new URLSearchParams(searchParams.toString());
+                                params.set("owner", value);
+                                router.push(`${pathname}?${params.toString()}`);
                             }}
                         >
                             <SelectTrigger
-                                size="sm"
-                                className="w-48"
+                                className="w-full sm:w-48"
                                 disabled={isAssignablePending}
                             >
                                 <SelectValue placeholder="Assign owner" />
@@ -217,21 +219,17 @@ export default function LeadsPage() {
 
                             <SelectContent>
                                 <SelectItem value="all">All</SelectItem>
-
-                                {assignableData?.map(
-                                    (m: { id: string; full_name: string }) => (
-                                        <SelectItem key={m.id} value={m.id}>
-                                            {m.full_name}
-                                        </SelectItem>
-                                    )
-                                )}
+                                {assignableData?.map((m) => (
+                                    <SelectItem key={m.id} value={m.id}>
+                                        {m.full_name}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
                 </div>
             </div>
 
-            {/* Table */}
             <div className="rounded-xl border overflow-x-auto">
                 <Table className="w-full text-sm">
                     <TableHeader>
@@ -260,7 +258,7 @@ export default function LeadsPage() {
                             leads.map((lead) => (
                                 <TableRow key={lead.id}>
                                     <TableCell className="font-medium whitespace-nowrap">
-                                        {lead.name} |  {lead.phone}
+                                        {lead.name} - {lead.phone}
                                     </TableCell>
 
                                     <TableCell className="max-w-35">
@@ -268,7 +266,7 @@ export default function LeadsPage() {
                                             <Link
                                                 href={`/trip/${lead.trip_id.slug}`}
                                                 target="_blank"
-                                                className="font-medium text-primary hover:underline line-clamp-2"
+                                                className="block truncate font-medium text-primary hover:underline"
                                             >
                                                 {lead.trip_id.name}
                                             </Link>
