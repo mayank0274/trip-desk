@@ -125,7 +125,7 @@ function Leads() {
                     return {
                         ...oldData,
                         leads: oldData.leads.map((lead) =>
-                            lead.id === apiRes.data.id ? apiRes.data : lead
+                            lead.id === apiRes.data.id ? { ...apiRes.data, trip_id: lead.trip_id } : lead
                         ),
                         pagination: { ...oldData.pagination },
                     }
