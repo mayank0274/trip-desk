@@ -22,6 +22,7 @@ import { EditTripDialog } from "./edit-trip"
 import Image from "next/image"
 import Link from "next/link"
 import { Trip, TripsResponse } from "@/types/trips"
+import { toast } from "sonner"
 
 
 function Trips() {
@@ -76,7 +77,7 @@ function Trips() {
             }
         },
         onError: (error) => {
-            alert(error.message)
+            toast.error(error.message)
         },
         onSuccess: (_, tripId) => {
             tripIdToDelete.current = null;

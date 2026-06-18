@@ -27,6 +27,7 @@ import {
 import { LeadWithTrip, LeadTouchPointsResponse, AIRequest, LeadTouchPoints, AiResponse } from "./types";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
+import { toast } from "sonner";
 
 interface Props {
     lead: LeadWithTrip | null;
@@ -74,7 +75,7 @@ export function LeadDetailsSheet({
             }
         },
         onError: (err) => {
-            alert(err.message)
+            toast.error(err?.message);
         },
         onSuccess: () => {
             aiRequestType.current = null;

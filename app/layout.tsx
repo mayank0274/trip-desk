@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TanstackQueryProvider } from "./TanstackQueryProvider";
+import { Toaster } from "@/components/ui/sonner"
 
 
 const poppins = Poppins({
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <TanstackQueryProvider>
           <TooltipProvider>{children}</TooltipProvider>
+          <Toaster richColors={true} theme="light" />
         </TanstackQueryProvider>
       </body>
     </html>

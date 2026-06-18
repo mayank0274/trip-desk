@@ -18,8 +18,6 @@ export async function requireRole(allowedRoles: string[]) {
         .eq("id", user.id)
         .single();
 
-    console.log(error)
-
     if (error || !membership) {
         return null;
     }

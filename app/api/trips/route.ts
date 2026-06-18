@@ -56,8 +56,6 @@ export async function GET(req: Request) {
             message: "Trip loading success",
         })
     } catch (error) {
-        console.error(error);
-
         return Response.json(
             { message: "Internal server error" },
             { status: 500 }

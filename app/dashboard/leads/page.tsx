@@ -31,6 +31,7 @@ import { CreateLeadTouchpointDialog } from "./lead-touchpoint-form"
 import { LeadDetailsSheet } from "./lead-details"
 import { Input } from "@/components/ui/input"
 import { debounce } from "@/lib/utils"
+import { toast } from "sonner"
 
 function Leads() {
     const router = useRouter()
@@ -115,7 +116,9 @@ function Leads() {
                 )
             }
         },
-        onError: (error) => alert(`Error editing lead: ${error.message}`),
+        onError: (error) => {
+            toast.error(error.message);
+        },
         onSuccess: (apiRes) => {
             leadToEdit.current = null
             queryClient.setQueryData(

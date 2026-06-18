@@ -26,7 +26,6 @@ export async function POST(req: Request) {
         }
 
         const auth = await requireRole(["admin", "sales"]);
-        console.log(auth)
         if (!auth) {
             return Response.json(
                 { message: "Forbidden", data: {} },
@@ -127,8 +126,6 @@ export async function GET(req: Request) {
             message: "Trip loading success",
         })
     } catch (error) {
-        console.error(error);
-
         return Response.json(
             { message: "Internal server error" },
             { status: 500 }
