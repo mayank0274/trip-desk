@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth/require-role";
 import { LeadQuerySchema } from "@/lib/validators/leads";
+import { supabaseAdmin } from "@/supabase/admin";
 import { createSupabaseServerClient } from "@/supabase/server";
 
 export async function GET(req: Request) {
@@ -9,7 +10,7 @@ export async function GET(req: Request) {
       return Response.json({ message: "Forbidden", data: {} }, { status: 403 });
     }
 
-    const supabase = await createSupabaseServerClient();
+    const supabase = supabaseAdmin;
 
     const { searchParams } = new URL(req.url);
 
@@ -38,6 +39,10 @@ export async function GET(req: Request) {
       .select("*, trip_id(id, name, slug)", { count: "exact" })
       .order("created_at", { ascending: false });
 
+    if (auth.role !== "admin") {
+      query.eq("owner_id", auth.user.id);
+    }
+
     if (search?.trim()) {
       query.or(
         `name.ilike.%${search}%,phone.ilike.%${search}%,email.ilike.%${search}%`,
@@ -48,7 +53,7 @@ export async function GET(req: Request) {
       query.eq("status", status);
     }
 
-    if (owner) {
+    if (owner && auth.role === "admin") {
       query.eq("owner_id", owner);
     }
 
@@ -69,6 +74,7 @@ export async function GET(req: Request) {
           hasNext: page * limit < (count ?? 0),
           hasPrevious: page > 1,
         },
+        role: auth.role,
       },
       message: "Leads loaded successfully",
     });

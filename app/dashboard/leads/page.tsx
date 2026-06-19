@@ -154,7 +154,7 @@ function Leads() {
 
     if (isError) return <div className="text-red-500">{(error as Error).message}</div>
 
-    const { leads, pagination } = data ?? { leads: [], pagination: null }
+    const { leads, pagination, role } = data ?? { leads: [], pagination: null, role: "admin" }
 
     return (
         <div className="flex flex-col gap-6 md:w-[97%] w-full min-w-0">
@@ -215,7 +215,7 @@ function Leads() {
                         >
                             <SelectTrigger
                                 className="w-full sm:w-48"
-                                disabled={isAssignablePending}
+                                disabled={isAssignablePending || role != "admin"}
                             >
                                 <SelectValue placeholder="Assign owner" />
                             </SelectTrigger>
@@ -239,7 +239,7 @@ function Leads() {
                         <TableRow>
                             <TableHead className="min-w-32.5">Traveller</TableHead>
                             <TableHead className="min-w-35">Trip</TableHead>
-                            <TableHead className="min-w-40">Owner</TableHead>
+                            {role === "admin" && <TableHead className="min-w-40">Owner</TableHead>}
                             <TableHead className="min-w-37.5">Status</TableHead>
                             <TableHead className="min-w-25">Created</TableHead>
                             <TableHead className="min-w-25">Last contact at</TableHead>
@@ -278,37 +278,33 @@ function Leads() {
                                         )}
                                     </TableCell>
 
-                                    <TableCell>
-                                        {isAssignableError ? (
-                                            <p className="text-red-500 text-xs">Error loading members</p>
-                                        ) : (
-                                            <Select
-                                                defaultValue={lead.owner_id ?? "unassigned"}
-                                                onValueChange={(value) => handleOwnerChange(lead.id, value)}
+                                    {role === "admin" && <TableCell>
+                                        <Select
+                                            defaultValue={lead.owner_id ?? "unassigned"}
+                                            onValueChange={(value) => handleOwnerChange(lead.id, value)}
+                                        >
+                                            <SelectTrigger
+                                                size="sm"
+                                                className="w-40"
+                                                disabled={
+                                                    (isEditing && leadToEdit.current === lead.id) ||
+                                                    isAssignablePending || isAssignableError
+                                                }
                                             >
-                                                <SelectTrigger
-                                                    size="sm"
-                                                    className="w-40"
-                                                    disabled={
-                                                        (isEditing && leadToEdit.current === lead.id) ||
-                                                        isAssignablePending
-                                                    }
-                                                >
-                                                    <SelectValue placeholder="Assign owner" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="unassigned">Unassigned</SelectItem>
-                                                    {assignableData?.map(
-                                                        (m: { id: string; full_name: string }) => (
-                                                            <SelectItem key={m.id} value={m.id}>
-                                                                {m.full_name}
-                                                            </SelectItem>
-                                                        )
-                                                    )}
-                                                </SelectContent>
-                                            </Select>
-                                        )}
-                                    </TableCell>
+                                                <SelectValue placeholder="Assign owner" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="unassigned">Unassigned</SelectItem>
+                                                {assignableData?.map(
+                                                    (m: { id: string; full_name: string }) => (
+                                                        <SelectItem key={m.id} value={m.id}>
+                                                            {m.full_name}
+                                                        </SelectItem>
+                                                    )
+                                                )}
+                                            </SelectContent>
+                                        </Select>
+                                    </TableCell>}
 
                                     <TableCell>
                                         <Select

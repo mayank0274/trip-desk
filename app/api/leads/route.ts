@@ -19,9 +19,7 @@ export async function POST(req: Request) {
 
     const { data, error } = await client
       .from("leads")
-      .insert(result.data)
-      .select()
-      .single();
+      .insert(result.data);
 
     if (error) {
       return Response.json({ message: error.message }, { status: 500 });

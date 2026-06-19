@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth/require-role";
 import { editTripSchema } from "@/lib/validators/trip";
+import { supabaseAdmin } from "@/supabase/admin";
 import { createSupabaseServerClient } from "@/supabase/server";
 
 interface RouteParams {
@@ -30,7 +31,7 @@ export async function DELETE(
             );
         }
 
-        const supabase = await createSupabaseServerClient();
+        const supabase = supabaseAdmin;
 
         const { error } = await supabase
             .from("trips")
@@ -108,7 +109,7 @@ export async function PATCH(
             );
         }
 
-        const supabase = await createSupabaseServerClient();
+        const supabase = supabaseAdmin;
 
         const { data, error } = await supabase
             .from("trips")

@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth/require-role";
 import { CreateLeadTouchPointSchema } from "@/lib/validators/leads";
+import { supabaseAdmin } from "@/supabase/admin";
 import { createSupabaseServerClient } from "@/supabase/server";
 
 export async function POST(req: Request) {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
             );
         }
 
-        const supabase = await createSupabaseServerClient();
+        const supabase = supabaseAdmin
 
         const { data, error } = await supabase
             .from("lead_touchpoints")

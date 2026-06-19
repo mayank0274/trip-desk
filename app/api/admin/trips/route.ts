@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth/require-role";
 import { createTripSchema, TripQuerySchema } from "@/lib/validators/trip";
+import { supabaseAdmin } from "@/supabase/admin";
 import { createSupabaseServerClient } from "@/supabase/server";
 
 export async function POST(req: Request) {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
             );
         }
 
-        const client = await createSupabaseServerClient();
+        const client = supabaseAdmin
 
         const { data, error } = await client
             .from("trips")
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
     try {
-        const supabase = await createSupabaseServerClient();
+        const supabase = supabaseAdmin;
 
         const { searchParams } = new URL(req.url);
 

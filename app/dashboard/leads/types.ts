@@ -30,6 +30,7 @@ export interface LeadsResponse {
   data: {
     leads: LeadWithTrip[];
     pagination: Pagination;
+    role: string;
   };
   message: string;
 }

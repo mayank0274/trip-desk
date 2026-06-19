@@ -1,4 +1,5 @@
 import { requireRole } from "@/lib/auth/require-role";
+import { supabaseAdmin } from "@/supabase/admin";
 import { createSupabaseServerClient } from "@/supabase/server";
 
 interface RouteParams {
@@ -20,7 +21,7 @@ export async function GET(req: Request, { params }: RouteParams) {
             return Response.json({ message: "Forbidden" }, { status: 403 });
         }
 
-        const supabase = await createSupabaseServerClient();
+        const supabase = supabaseAdmin;
 
         const { data, error } = await supabase
             .from("lead_touchpoints")

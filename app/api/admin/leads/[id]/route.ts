@@ -1,5 +1,6 @@
 import { requireRole } from "@/lib/auth/require-role";
 import { editLeadSchema } from "@/lib/validators/leads";
+import { supabaseAdmin } from "@/supabase/admin";
 import { createSupabaseServerClient } from "@/supabase/server";
 
 interface RouteParams {
@@ -39,7 +40,7 @@ export async function PATCH(req: Request, { params }: RouteParams) {
       );
     }
 
-    const supabase = await createSupabaseServerClient();
+    const supabase = supabaseAdmin;
 
     const { data, error } = await supabase
       .from("leads")

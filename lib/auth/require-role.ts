@@ -1,3 +1,4 @@
+import { supabaseAdmin } from "@/supabase/admin";
 import { createSupabaseServerClient } from "@/supabase/server";
 
 export async function requireRole(allowedRoles: string[]) {
@@ -9,10 +10,11 @@ export async function requireRole(allowedRoles: string[]) {
 
 
     if (!user) {
+        console.log("also..")
         return null;
     }
 
-    const { data: membership, error } = await supabase
+    const { data: membership, error } = await supabaseAdmin
         .from("team")
         .select("role")
         .eq("id", user.id)
