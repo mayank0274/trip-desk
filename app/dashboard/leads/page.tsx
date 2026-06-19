@@ -30,7 +30,7 @@ import { AssignableTeamMembersResponse } from "./types"
 import { CreateLeadTouchpointDialog } from "./lead-touchpoint-form"
 import { LeadDetailsSheet } from "./lead-details"
 import { Input } from "@/components/ui/input"
-import { debounce } from "@/lib/utils"
+import { debounce, getRelativeDate } from "@/lib/utils"
 import { toast } from "sonner"
 
 function Leads() {
@@ -45,7 +45,7 @@ function Leads() {
     const search = searchParams.get("search") || ""
 
     const [selectedLead, setSelectedLead] = useState<LeadWithTrip | null>(null);
-    const mode = useRef<"edit" | "view" | null>(null);
+    const mode = useRef<"view" | null>(null);
 
     const { data, isPending, isError, error } = useQuery({
         queryKey: ["leads", page, limit, status, owner, search],
@@ -336,23 +336,10 @@ function Leads() {
                                     </TableCell>
 
                                     <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                        {new Date(`${lead.updated_at}Z`).toLocaleString("en-IN", {
-                                            timeZone: "Asia/Kolkata",
-                                            dateStyle: "medium",
-                                            timeStyle: "short",
-                                        })}
+                                        {getRelativeDate(lead.updated_at)}
                                     </TableCell>
 
                                     <TableCell className="flex gap-2">
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => {
-                                                mode.current = "edit";
-                                                setSelectedLead(lead);
-                                            }}
-                                        >
-                                            Add Lead Toucpoints
-                                        </Button>
                                         <Button
                                             variant="outline"
                                             onClick={() => {
@@ -394,15 +381,6 @@ function Leads() {
                     </div>
                 </div>
             )}
-
-            {
-                selectedLead && mode.current === "edit" && <CreateLeadTouchpointDialog userId={selectedLead.owner_id!} leadId={selectedLead.id} open={!!selectedLead} onOpenChange={(next: boolean) => {
-                    if (!next) {
-                        setSelectedLead(null);
-                        mode.current = null;
-                    }
-                }} />
-            }
 
             {
                 selectedLead && mode.current === "view" && <LeadDetailsSheet lead={selectedLead} open={!!selectedLead} onOpenChange={(open) => {

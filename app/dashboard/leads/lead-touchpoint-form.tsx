@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 
 import { Field } from "@/components/field";
+import { queryClient } from "@/app/TanstackQueryProvider";
+import { LeadTouchPointsResponse } from "./types";
 
 interface IProps {
     leadId: string;
@@ -60,6 +62,19 @@ export function CreateLeadTouchpointDialog({
             );
 
             return response.data;
+        },
+        onSuccess: (apiRes) => {
+            console.log(apiRes)
+            queryClient.setQueryData(
+                ["lead-touchpoints", leadId],
+                (oldData: LeadTouchPointsResponse | undefined) => {
+                    if (!oldData) return oldData;
+
+                    return {
+                        touchpoints: [apiRes.data, ...oldData.touchpoints]
+                    };
+                }
+            );
         },
     });
 

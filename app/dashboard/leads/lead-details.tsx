@@ -22,12 +22,14 @@ import {
     MessageSquare,
     Sparkle,
     Loader2,
+    PlusCircle,
 } from "lucide-react";
 
 import { LeadWithTrip, LeadTouchPointsResponse, AIRequest, LeadTouchPoints, AiResponse } from "./types";
 import { Button } from "@/components/ui/button";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { CreateLeadTouchpointDialog } from "./lead-touchpoint-form";
 
 interface Props {
     lead: LeadWithTrip | null;
@@ -40,7 +42,7 @@ export function LeadDetailsSheet({
     open,
     onOpenChange,
 }: Props) {
-
+    const [isEditing, setIsEditing] = useState(false);
     const { data, isLoading, error } = useQuery<LeadTouchPointsResponse>({
         queryKey: ["lead-touchpoints", lead?.id],
         enabled: !!lead?.id && open,
@@ -179,32 +181,39 @@ export function LeadDetailsSheet({
                         <div className="mb-4">
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                                    Touchpoint Timeline
+                                    Timeline
                                 </h3>
+                                <div className="flex gap-2">
+                                    <Button size="sm"
+                                        title="Add new log"
+                                        variant="default"
+                                        className="gap-2" onClick={() => {
+                                            setIsEditing(true)
+                                        }}><PlusCircle className="w-4 h-4" /></Button>
+                                    <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        className="gap-2"
+                                        onClick={async () => {
+                                            const payload = data?.touchpoints.map(
+                                                ({ contact_via, next_action, note }: LeadTouchPoints) => ({
+                                                    contact_via,
+                                                    next_action,
+                                                    note,
+                                                })
+                                            );
 
-                                <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    className="gap-2"
-                                    onClick={async () => {
-                                        const payload = data?.touchpoints.map(
-                                            ({ contact_via, next_action, note }: LeadTouchPoints) => ({
-                                                contact_via,
-                                                next_action,
-                                                note,
-                                            })
-                                        );
+                                            if (!payload?.length) return;
 
-                                        if (!payload?.length) return;
-
-                                        aiRequestType.current = "summary";
-                                        await aiHandler({ type: "summary", payload });
-                                    }}
-                                    disabled={isPerformingAiOps && aiRequestType.current === "summary"}
-                                >
-                                    {isPerformingAiOps && aiRequestType.current === "summary" ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkle className="w-3 h-3" />}
-                                    AI Summary
-                                </Button>
+                                            aiRequestType.current = "summary";
+                                            await aiHandler({ type: "summary", payload });
+                                        }}
+                                        disabled={isPerformingAiOps && aiRequestType.current === "summary"}
+                                    >
+                                        {isPerformingAiOps && aiRequestType.current === "summary" ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkle className="w-3 h-3" />}
+                                        AI Summary
+                                    </Button>
+                                </div>
                             </div>
 
                             {aiResponse?.type === "summary" && (
@@ -288,6 +297,11 @@ export function LeadDetailsSheet({
                     </div>
                 </div>
             </SheetContent>
+            <CreateLeadTouchpointDialog userId={lead.owner_id!} leadId={lead.id} open={isEditing} onOpenChange={(next: boolean) => {
+                if (!next) {
+                    setIsEditing(next);
+                }
+            }} />
         </Sheet>
     );
 }
