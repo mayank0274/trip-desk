@@ -21,10 +21,11 @@ export function debounce<T extends (...args: any[]) => void>(
 }
 
 export function getRelativeDate(date: string) {
-  const target = new Date(`${date}Z`);
+  const dateString = date.endsWith("Z") || date.includes("+") ? date : `${date}Z`;
+  const target = new Date(dateString);
   const now = new Date();
 
-  const fmt = new Intl.DateTimeFormat("en-IN", {
+  const fmt = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Kolkata",
     year: "numeric",
     month: "2-digit",
