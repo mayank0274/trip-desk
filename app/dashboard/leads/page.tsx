@@ -94,6 +94,7 @@ function Leads() {
 
         if (value.trim()) {
             params.set("search", value);
+            params.set("page", "1");
         } else {
             params.delete("search");
         }
@@ -184,6 +185,7 @@ function Leads() {
                             onValueChange={(value) => {
                                 const params = new URLSearchParams(searchParams.toString());
                                 params.set("status", value);
+                                params.set("page", "1");
                                 router.push(`${pathname}?${params.toString()}`);
                             }}
                         >
@@ -210,6 +212,7 @@ function Leads() {
                             onValueChange={(value) => {
                                 const params = new URLSearchParams(searchParams.toString());
                                 params.set("owner", value);
+                                params.set("page", "1");
                                 router.push(`${pathname}?${params.toString()}`);
                             }}
                         >
